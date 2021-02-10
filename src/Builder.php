@@ -77,11 +77,11 @@ class Builder
         return $this->get($columns);
     }
 
-    public function paginate(?int $perPage = null, ?int $page = 1, array $columns = ['*'])
+    public function paginate(?int $perPage = null, ?int $page = null, array $columns = ['*'])
     {
         $perPage = $perPage ?: $this->model->getPerPage();
         $page = $page ?: request()->page();
-
+        
         $results = ($total = $this->query->getCountForPagination())
             ? $this->forPage($page, $perPage)->get($columns)
             : $this->model->newCollection();
