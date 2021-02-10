@@ -88,9 +88,9 @@ class Builder
 
         return (object) [
             'meta' => [
-                'total' => $total,
-                'page' => $page,
-                'per_page' => $perPage
+                'total' => (int) $total,
+                'page' => (int) $page,
+                'per_page' => (int) $perPage
             ],
             'data' => $results
         ];
@@ -108,8 +108,8 @@ class Builder
 
         return [
             'meta' => [
-                'per_page' => $perPage,
-                'total' => $total
+                'per_page' => (int) $perPage,
+                'total' => (int) $total
             ],
             'data' => $results
         ];
