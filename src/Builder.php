@@ -81,7 +81,7 @@ class Builder
     {
         $perPage = $perPage ?: $this->model->getPerPage();
         $page = $page ?: request()->page();
-        
+
         $results = ($total = $this->query->getCountForPagination())
             ? $this->forPage($page, $perPage)->get($columns)
             : $this->model->newCollection();
@@ -144,36 +144,41 @@ class Builder
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
 
-        if(is_string($fields)) $fields = func_get_args();
+        if (is_string($fields)) {
+            $fields = func_get_args();
+        }
         $sorts = request()->sorts();
         foreach ($sorts as $field => $dir) {
-            if(in_array($field, $fields)){
+            if (in_array($field, $fields)) {
                 $this->query->orderBy($field, $dir);
             }
         }
         return $this;
     }
 
-    public function allowedSearch($fields, $operator = 'equal')
+    public function allowedSearch($fields, $operator = 'equals')
     {
         if (! class_exists('Xtwoend\\QueryString\\Request')) {
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
 
-        if(! in_array($operator, ['contains', 'equal'])) {
-            throw new \RuntimeException("Operator only support contains or equal");
+
+        if (is_string($fields)) {
+            $fields = func_get_args();
+            $operator = array_pop($fields);
         }
 
-        if (is_string($fields)) $fields = func_get_args();
-    
-        $fields = array_pop($fields);
+        if (! in_array($operator, ['contains', 'equals'])) {
+            throw new \RuntimeException("Operator only support contains or equals");
+        }
+
         $q      = request()->filter();
 
         if (! is_null($q) && $q !== '') {
             foreach ($fields as $field) {
-                if($operator === 'contains'){
+                if ($operator === 'contains') {
                     $this->query->orWhere($field, 'LIKE', "%{$q}%");
-                }else{
+                } else {
                     $this->query->orWhere($field, $q);
                 }
             }

@@ -334,7 +334,7 @@ class Collection extends BaseCollection
     public function pad(int $size, $value): BaseCollection
     {
         return $this->toBase()->pad($size, $value);
-    }    
+    }
 
     /**
      * Get a dictionary keyed by primary keys.
