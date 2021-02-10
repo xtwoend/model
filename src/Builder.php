@@ -154,18 +154,28 @@ class Builder
         return $this;
     }
 
-    public function allowedSearch($fields)
+    public function allowedSearch($fields, $operator = 'equal')
     {
         if (! class_exists('Xtwoend\\QueryString\\Request')) {
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
 
-        if (is_string($fields)) $fields = func_get_args();
+        if(! in_array($operator, ['contains', 'equal'])) {
+            throw new \RuntimeException("Operator only support contains or equal");
+        }
 
-        $q = request()->filter();
+        if (is_string($fields)) $fields = func_get_args();
+    
+        $fields = array_pop($fields);
+        $q      = request()->filter();
+
         if (! is_null($q) && $q !== '') {
             foreach ($fields as $field) {
-                $this->query->orWhere($field, $q);
+                if($operator === 'contains'){
+                    $this->query->orWhere($field, 'LIKE', "%{$q}%");
+                }else{
+                    $this->query->orWhere($field, $q);
+                }
             }
         }
 
