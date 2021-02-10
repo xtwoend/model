@@ -80,7 +80,7 @@ class Builder
     public function paginate(?int $perPage = null, ?int $page = null, array $columns = ['*'])
     {
         $perPage = $perPage ?: $this->model->getPerPage();
-        $page = $page ?: request()->page();
+        $page = $page ?: request()->input('page', 1);
 
         $results = ($total = $this->query->getCountForPagination())
             ? $this->forPage($page, $perPage)->get($columns)
