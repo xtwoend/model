@@ -140,7 +140,7 @@ class Builder
     // bonus
     public function allowedSorts($fields)
     {
-        if (! class_exists('\Xtwoend\QueryString\Request')) {
+        if (! class_exists('Xtwoend\\QueryString\\Request')) {
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
 
@@ -156,7 +156,7 @@ class Builder
 
     public function allowedSearch($fields)
     {
-        if (! class_exists('\Xtwoend\QueryString\Request')) {
+        if (! class_exists('Xtwoend\\QueryString\\Request')) {
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
 
