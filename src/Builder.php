@@ -157,7 +157,7 @@ class Builder
         $q = request()->filter();
         if (! is_null($q) && $q !== '') {
             foreach ($fields as $field) {
-                $this->query->where($field, $q);
+                $this->query->orWhere($field, $q);
             }
         }
 
