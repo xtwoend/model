@@ -27,7 +27,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     protected $primaryKey = 'id';
     protected static $unguarded = false;
     protected $timestamps = true;
-    protected $perPage = 15;
+    protected $perPage = 12;
     public $exists = false;
 
     protected $error;
