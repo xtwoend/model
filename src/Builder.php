@@ -162,24 +162,24 @@ class Builder
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
 
-
         if (is_string($fields)) {
             $fields = func_get_args();
-            $operator = array_pop($fields);
+            $ch = $fields;
+            $operator = array_pop($ch);
+            if (in_array($operator, ['contains', 'equals'])) {
+                $operator = $operator;
+                array_pop($fields);
+            }
         }
 
-        if (! in_array($operator, ['contains', 'equals'])) {
-            throw new \RuntimeException("Operator only support contains or equals");
-        }
+        $keyword = request()->filter();
 
-        $q      = request()->filter();
-
-        if (! is_null($q) && $q !== '') {
+        if (! is_null($keyword) && $keyword !== '') {
             foreach ($fields as $field) {
                 if ($operator === 'contains') {
-                    $this->query->orWhere($field, 'LIKE', "%{$q}%");
+                    $this->query->orWhere($field, 'LIKE', "%{$keyword}%");
                 } else {
-                    $this->query->orWhere($field, $q);
+                    $this->query->orWhere($field, $keyword);
                 }
             }
         }
