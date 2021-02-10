@@ -140,10 +140,10 @@ class Builder
     // bonus
     public function allowedSorts($fields)
     {
-        if (! class_exists(Xtwoend\QueryString\Request::class)) {
+        if (! class_exists('\Xtwoend\QueryString\Request')) {
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
-        
+
         if(is_string($fields)) $fields = func_get_args();
         $sorts = request()->sorts();
         foreach ($sorts as $field => $dir) {
@@ -156,7 +156,7 @@ class Builder
 
     public function allowedSearch($fields)
     {
-        if (! class_exists(Xtwoend\QueryString\Request::class)) {
+        if (! class_exists('\Xtwoend\QueryString\Request')) {
             throw new \RuntimeException("This function require library xtwoend/query-string, please install first.");
         }
 
