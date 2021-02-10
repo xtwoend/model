@@ -72,6 +72,11 @@ class Builder
         return $builder->getModel()->newCollection($models);
     }
 
+    public function all($columns = ['*'])
+    {
+        return $this->get($columns);
+    }
+
     public function paginate(?int $perPage = null, ?int $page = 1, array $columns = ['*'])
     {
         $perPage = $perPage ?: $this->model->getPerPage();

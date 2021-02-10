@@ -9,8 +9,8 @@ use Hyperf\Utils\Str;
 use JsonSerializable;
 use Xtwoend\Model\Builder;
 use Hyperf\DbConnection\Db;
+use Xtwoend\Model\Collection;
 use Hyperf\Utils\Contracts\Jsonable;
-use Hyperf\Database\Model\Collection;
 use Hyperf\Utils\Contracts\Arrayable;
 
 abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
@@ -166,6 +166,20 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     public function getHidden()
     {
         return $this->hidden;
+    }
+
+    public function setHidden(array $hidden)
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
+
+    public function addHidden($attributes = null)
+    {
+        $this->hidden = array_merge(
+            $this->hidden,
+            is_array($attributes) ? $attributes : func_get_args()
+        );
     }
 
     public function syncOriginal()
