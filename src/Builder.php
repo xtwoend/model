@@ -136,4 +136,31 @@ class Builder
             $this->query->getConnection()->getName()
         );
     }
+
+    // bonus
+    public function allowedSorts($fields)
+    {
+        if(is_string($fields)) $fields = func_get_args();
+        $sorts = request()->sorts();
+        foreach ($sorts as $field => $dir) {
+            if(in_array($field, $fields)){
+                $this->query->orderBy($field, $dir);
+            }
+        }
+        return $this;
+    }
+
+    public function allowedSearch($fields)
+    {
+        if (is_string($fields)) $fields = func_get_args();
+
+        $q = request()->filter();
+        if (! is_null($q) && $q !== '') {
+            foreach ($fields as $field) {
+                $this->query->where($field, $q);
+            }
+        }
+
+        return $this;
+    }
 }
