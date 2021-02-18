@@ -142,6 +142,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
                 return $this->castAttribute($key);
             }
 
+            if (in_array($key, ['created_at', 'updated_at'])) {
+                return Carbon::parse($this->attributes[$key])->toAtomString() ?? null;
+            }
+
             return $this->attributes[$key] ?? null;
         }
 
@@ -415,6 +419,14 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
                     $attributes[$cast] = $attributes[$cast]->toArray();
                 }
             }
+        }
+
+        if(isset($attributes['created_at'])){
+            $attributes['created_at'] = Carbon::parse($attributes['crated_at'])->toAtomString();
+        }
+
+        if(isset($attributes['updated_at'])){
+            $attributes['updated_at'] = Carbon::parse($attributes['updated_at'])->toAtomString();
         }
 
         $values = array_diff_key($attributes, array_flip($this->getHidden()));
