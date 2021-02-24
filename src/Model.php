@@ -29,6 +29,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     protected $timestamps = true;
     protected $perPage = 12;
     public $exists = false;
+    protected $forceDeleting = true;
 
     protected $error;
 
@@ -422,7 +423,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         }
 
         if(isset($attributes['created_at'])){
-            $attributes['created_at'] = Carbon::parse($attributes['crated_at'])->toAtomString();
+            $attributes['created_at'] = Carbon::parse($attributes['created_at'])->toAtomString();
         }
 
         if(isset($attributes['updated_at'])){
@@ -465,5 +466,62 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     public function getCasts()
     {
         return $this->json;
+    }
+
+    // soft delete
+    public function getDeletedAtColumn()
+    {
+        return defined('static::DELETED_AT') ? static::DELETED_AT : 'deleted_at';
+    }
+
+    public function trashed()
+    {
+        return ! is_null($this->{$this->getDeletedAtColumn()});
+    }
+
+    protected function runSoftDelete()
+    {
+        $query = $this->newQuery()->where($this->getKeyName(), $this->getKey());
+
+        $time = new Carbon();
+
+        $columns = [$this->getDeletedAtColumn() => $time];
+
+        $this->{$this->getDeletedAtColumn()} = $time;
+
+        if ($this->timestamps && ! is_null($this->getAttribute('updated_at'))) {
+            $this->updated_at = $time;
+            $columns['updated_at'] = $time;
+        }
+
+        $query->update($columns);
+    }
+
+    public function delete() 
+    {
+        if (! $this->exists) {
+            return;
+        }
+
+        if ($this->forceDeleting) {
+            $this->exists = false;
+            return $this->newQuery()->where($this->getKeyName(), $this->getKey())->delete();
+        }
+
+        $this->runSoftDelete();
+
+        return true;
+    }
+
+    public function restore()
+    {
+        $this->{$this->getDeletedAtColumn()} = null;
+        $this->exists = true;
+        return $this->save();
+    }
+
+    public function isForceDeleting()
+    {
+        return $this->forceDeleting;
     }
 }

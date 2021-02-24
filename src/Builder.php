@@ -67,6 +67,10 @@ class Builder
 
     public function get($columns = ['*'])
     {
+        if (! $this->getModel()->isForceDeleting()) {
+            $this->query->whereNull($this->getModel()->getDeletedAtColumn());
+        }
+
         $builder = clone $this;
         $models = $builder->getModels($columns);
         return $builder->getModel()->newCollection($models);
