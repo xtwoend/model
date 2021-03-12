@@ -4,7 +4,7 @@ namespace Xtwoend\Model;
 
 trait HasTablePrefix
 {
-    protected string $tableWithPrefix;
+    protected $prefix;
 
     /**
      * Get the prefix associated with the model.
@@ -17,25 +17,27 @@ trait HasTablePrefix
     }
 
     /**
+     * Set the Prefix associated with the model.
+     *
+     * @param  string  $Prefix
+     * @return $this
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+
+        return $this;
+    }
+
+    /**
      * Get the table associated with the model.
      *
      * @return string
      */
     public function getTable()
     {
-        return $this->tableWithPrefix ?? $this->getPrefix() . parent::getTable();
+        return $this->getPrefix() . parent::getTable();
     }
 
-    /**
-     * Set the table associated with the model.
-     *
-     * @param  string  $table
-     * @return $this
-     */
-    public function setPrefix($prefix)
-    {
-        $this->tableWithPrefix = $prefix;
-
-        return $this;
-    }
+    
 }
