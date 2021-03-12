@@ -16,6 +16,7 @@ use Hyperf\Utils\Contracts\Arrayable;
 abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
 {
     use Relation;
+    use HasTablePrefix;
 
     protected $connection = 'default';
     protected $prefix;
@@ -52,9 +53,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     public function newQuery()
     {
-        $connection = Db::connection($this->getConnection())
-            ->setTablePrefix($this->getTablePrefix());
-
+        $connection = Db::connection($this->getConnection());
         return (new Builder($connection))->table($this->getTable())->setModel($this);
     }
 
