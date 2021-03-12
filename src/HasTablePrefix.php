@@ -32,9 +32,9 @@ trait HasTablePrefix
      * @param  string  $table
      * @return $this
      */
-    public function setTable($table)
+    public function setPrefix($prefix)
     {
-        $this->tableWithPrefix = $table;
+        $this->tableWithPrefix = $prefix;
 
         return $this;
     }
