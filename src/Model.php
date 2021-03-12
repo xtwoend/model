@@ -52,8 +52,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     public function newQuery()
     {
-        $connection = Db::connection($this->getConnection());
-        return (new Builder($connection))->table($this->getTable())->setModel($this);
+        $connection = Db::connection($this->getConnection())->table($this->getTable());
+        return (new Builder($connection))->setModel($this);
     }
 
     public static function query()
