@@ -16,7 +16,6 @@ use Hyperf\Utils\Contracts\Arrayable;
 abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializable
 {
     use Relation;
-    use HasTablePrefix;
 
     protected $connection = 'default';
     protected $prefix;
@@ -71,17 +70,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     {
         $this->connection = $name;
         return $this;
-    }
-
-    public function setTablePrefix($prefix)
-    {
-        $this->prefix = $prefix;
-        return $this;
-    }
-
-    public function getTablePrefix()
-    {
-        return $this->prefix;
     }
 
     public function getTable()
