@@ -18,6 +18,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     use Relation;
 
     protected $connection = 'default';
+    protected $prefix;
     protected $table;
     protected $hidden = [];
     protected $attributes = [];
@@ -51,7 +52,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     public function newQuery()
     {
-        return (new Builder(Db::connection($this->getConnection())->table($this->getTable())))->setModel($this);
+        $connection = Db::connection($this->getConnection())
+            ->setTablePrefix($this->getTablePrefix());
+
+        return (new Builder($connection))->table($this->getTable())->setModel($this);
     }
 
     public static function query()
@@ -68,6 +72,17 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     {
         $this->connection = $name;
         return $this;
+    }
+
+    public function setTablePrefix($prefix)
+    {
+        $this->prefix = $prefix;
+        return $this;
+    }
+
+    public function getTablePrefix()
+    {
+        return $this->prefix;
     }
 
     public function getTable()
@@ -422,11 +437,11 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
             }
         }
 
-        if(isset($attributes['created_at'])){
+        if (isset($attributes['created_at'])) {
             $attributes['created_at'] = Carbon::parse($attributes['created_at'])->toAtomString();
         }
 
-        if(isset($attributes['updated_at'])){
+        if (isset($attributes['updated_at'])) {
             $attributes['updated_at'] = Carbon::parse($attributes['updated_at'])->toAtomString();
         }
 
@@ -497,7 +512,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         $query->update($columns);
     }
 
-    public function delete() 
+    public function delete()
     {
         if (! $this->exists) {
             return;
